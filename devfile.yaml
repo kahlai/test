@@ -1,0 +1,64 @@
+schemaVersion: 2.1.0
+metadata:
+  name: dotnet
+projects:
+  - git:
+      remotes:
+        origin: 'https://github.com/kahlai/test.git'
+    name: test
+components:
+  - attributes:
+      app.kubernetes.io/name: tools
+      che-theia.eclipse.org/vscode-extensions: []
+    container:
+      args:
+        - sh
+        - '-c'
+        - '${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}'
+      endpoints:
+        - exposure: public
+          name: hello-endpoint
+          protocol: http
+          targetPort: 5032
+      env:
+        - name: PLUGIN_REMOTE_ENDPOINT_EXECUTABLE
+          value: /remote-endpoint/plugin-remote-endpoint
+        - name: THEIA_PLUGINS
+          value: 'local-dir:///plugins/sidecars/tools'
+      image: 'registry.redhat.io/devspaces/udi-rhel8:3.2'
+      memoryLimit: 2Gi
+      mountSources: true
+      sourceMapping: /projects
+      volumeMounts:
+        - name: nuget
+          path: /home/user/.nuget
+        - name: remote-endpoint
+          path: /remote-endpoint
+        - name: plugins
+          path: /plugins
+    name: tools
+  - name: nuget
+    volume:
+      size: 1G
+commands:
+  - exec:
+      commandLine: dotnet restore
+      component: tools
+      group:
+        kind: build
+      workingDir: '${PROJECTS_ROOT}/test'
+    id: 1-update-dependencies
+  - exec:
+      commandLine: dotnet build
+      component: tools
+      group:
+        kind: build
+      workingDir: '${PROJECTS_ROOT}/test'
+    id: 2-build
+  - exec:
+      commandLine: dotnet run
+      component: tools
+      group:
+        kind: run
+      workingDir: '${PROJECTS_ROOT}/test'
+    id: 3-run
