@@ -15,9 +15,9 @@ components:
         - exposure: public
           name: hello-endpoint
           protocol: http
-          targetPort: 5032
+          targetPort: 5000
       env: []
-      image: 'quay.io/devfile/universal-developer-image:ubi8-13008af'
+      image: 'registry.redhat.io/devspaces/udi-rhel8:3.2-26.1666711967'
       memoryLimit: 2Gi
       mountSources: true
       sourceMapping: /projects
