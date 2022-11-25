@@ -11,41 +11,23 @@ components:
       app.kubernetes.io/name: tools
       che-theia.eclipse.org/vscode-extensions: []
     container:
-      args:
-        - sh
-        - '-c'
-        - '${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}'
       endpoints:
         - exposure: public
           name: hello-endpoint
           protocol: http
           targetPort: 5032
-      env:
-        - name: PLUGIN_REMOTE_ENDPOINT_EXECUTABLE
-          value: /remote-endpoint/plugin-remote-endpoint
-        - name: THEIA_PLUGINS
-          value: 'local-dir:///plugins/sidecars/tools'
-      image: 'registry.redhat.io/devspaces/udi-rhel8:3.2'
+      env: []
+      image: 'quay.io/devfile/universal-developer-image:ubi8-13008af'
       memoryLimit: 2Gi
       mountSources: true
       sourceMapping: /projects
       volumeMounts:
         - name: nuget
           path: /home/user/.nuget
-        - name: remote-endpoint
-          path: /remote-endpoint
-        - name: plugins
-          path: /plugins
     name: tools
   - name: nuget
     volume:
       size: 1G
-  - name: remote-endpoint
-    volume:
-      size: 256Mi
-  - name: plugins
-    volume:
-      size: 256Mi
 commands:
   - exec:
       commandLine: dotnet restore
