@@ -17,7 +17,7 @@ components:
           protocol: http
           targetPort: 5000
       env: []
-      image: 'registry.redhat.io/devspaces/udi-rhel8:3.2-26.1666711967'
+      image: 'registry.redhat.io/devspaces/udi-rhel8:3.3-37.1673517018'
       memoryLimit: 2Gi
       mountSources: true
       sourceMapping: /projects
